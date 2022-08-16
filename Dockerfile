@@ -19,4 +19,6 @@ COPY . .
 
 RUN chmod u+x setup.sh
 
+EXPOSE 8000:8000
+
 CMD ./setup.sh

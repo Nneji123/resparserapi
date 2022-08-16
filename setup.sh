@@ -10,10 +10,11 @@ python -m nltk.downloader punkt
 python -m nltk.downloader wordnet
 python -m nltk.downloader averaged_perceptron_tagger
 python -m nltk.downloader maxent_treebank_pos_tagger
-python -m nltk.downloader punkt_tokenizer
 python -m nltk.downloader universal_tagset
 python -m nltk.downloader brown
 python -m nltk.downloader maxent_ne_chunker
 
 
-gunicorn -w 1 -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT
+uvicorn app:app --host=0.0.0.0 --port=${PORT:-5000}
+#uvicorn app:app --reload --port 8000 --host 0.0.0.0
+#gunicorn -w 1 -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT
