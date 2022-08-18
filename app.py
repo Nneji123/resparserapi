@@ -1,14 +1,15 @@
+import os
+import time
+
 from fastapi import FastAPI, File, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import (FileResponse, PlainTextResponse,
-                               StreamingResponse)
+from fastapi.responses import FileResponse, PlainTextResponse, StreamingResponse
 from resume_parser import resumeparse
 
 app = FastAPI(
-    title="WordsAI API",
-    description="""A collection of NLP Applications served as APIs using FastAPI.""",
+    title="Resume Parser API",
+    description="""An API for parsing resumes and extracting information from them.""",
     version="0.0.1",
-    debug=True,
 )
 
 origins = ["*"]
@@ -22,7 +23,6 @@ app.add_middleware(
 )
 
 
-
 @app.get("/", response_class=PlainTextResponse, tags=["home"])
 async def home():
     note = """
@@ -31,6 +31,7 @@ async def home():
     Note: add "/redoc" to get the complete documentation.
     """
     return note
+
 
 @app.post("/parse", tags=["Parser"])
 async def resume_parser(file: UploadFile) -> dict:
@@ -46,7 +47,7 @@ async def resume_parser(file: UploadFile) -> dict:
     # write a function to save the uploaded file and return the file name
     files = await file.read()
     # save the file
-    filename = "./temp/file.pdf"
+    filename = "file.pdf"
     with open(filename, "wb+") as f:
         f.write(files)
     # open the file and return the file name
@@ -54,6 +55,11 @@ async def resume_parser(file: UploadFile) -> dict:
         with open(filename, "rb") as f:
             pdf = f.read()
         data = data = resumeparse.read_file(filename)
+        time.sleep(1)
+        filepath = "file.pdf"
+        if os.path.exists(filepath):
+            os.remove(filepath)
         return data
+
     except FileNotFoundError:
         return f"Error! Cannot Parse Resume"
