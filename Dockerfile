@@ -2,22 +2,12 @@ FROM python:3.8.13-slim-bullseye
 
 WORKDIR /app
 
-RUN apt-get -y update  && apt-get install -y \
-  python3-dev \
-  apt-utils \
-  python-dev \
-  build-essential \
-&& rm -rf /var/lib/apt/lists/*
-
 RUN pip install --upgrade setuptools 
-    
-COPY requirements.txt .
-
-RUN pip install -r requirements.txt 
 
 COPY . .
 
-RUN pip install spacy==2.3.5\ 
+RUN pip install spacy==2.3.5\
+    && pip install fastapi[all] resume_parser==0.8.4\ 
     && pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz \
     && pip install pyresparser\
 

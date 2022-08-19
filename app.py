@@ -5,6 +5,7 @@ from fastapi import FastAPI, File, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, PlainTextResponse, StreamingResponse
 from resume_parser import resumeparse
+from pdfminer.pdfparser import PDFSyntaxError
 
 app = FastAPI(
     title="Resume Parser API",
@@ -60,6 +61,7 @@ async def resume_parser(file: UploadFile) -> dict:
         if os.path.exists(filepath):
             os.remove(filepath)
         return data
+        
 
-    except FileNotFoundError:
-        return f"Error! Cannot Parse Resume"
+    except (FileNotFoundError, PDFSyntaxError) as e:
+        return f"Error! Cannot Parse Resume. Please make sure you upload a PDF File!"
